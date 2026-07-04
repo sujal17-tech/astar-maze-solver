@@ -4,11 +4,13 @@
 This project implements the A* search algorithm to solve mazes represented as a grid of walkable cells and walls. It models each cell as a node with cost values (g, h, f) and supports both Manhattan and Euclidean heuristics to guide the search efficiently toward the goal. The algorithm returns the shortest path when one exists, and correctly detects and reports when the goal is unreachable rather than failing silently. Both a console-based text view and a matplotlib visualization are included to display explored cells and the final path. Built as Task 1 for my AI/ML internship to apply core pathfinding concepts in a hands-on, visual way.
 
 ## Features
-- A* pathfinding
-- Manhattan & Euclidean heuristics
-- Console visualization
-- Matplotlib visualization
-- Detects unreachable goals
+Grid-based maze representation with configurable start, goal, and walls
+A* search implemented with a priority queue (heapq) for efficiency
+Pluggable heuristics — Manhattan (4-directional) or Euclidean (diagonal-friendly)
+Optional 8-directional (diagonal) movement
+Graceful handling of unreachable goals (returns None instead of failing)
+Two visualization modes: console/text output and a matplotlib plot
+Includes a runnable demo covering both a solvable maze and an unreachable one
 
 ## Project Structure
 maze_astar/
@@ -20,17 +22,40 @@ maze_astar/
 - matplotlib
 
 ## Installation
+git clone https://github.com/<your-username>/astar-maze-solver.git
+cd astar-maze-solver
+
+# (recommended) create a virtual environment
+python -m venv venv
+source venv/bin/activate     # Windows: venv\Scripts\activate
+
+# install the only dependency
 pip install matplotlib
 
 ## Run
 python maze_solver.py
 
 ## How it Works
-Short explanation of:
-- Node
-- Maze
-- A* algorithm
-- Heuristics
+A* finds the shortest path by always expanding the most promising node next, using:
+
+f(n) = g(n) + h(n)
+
+
+g(n) — the actual cost to reach node n from the start
+h(n) — a heuristic estimate of the remaining cost from n to the goal
+f(n) — the algorithm's best estimate of the total path cost through n
+
+
+Algorithm outline:
+
+
+Push the start node onto a min-heap priority queue, ordered by f.
+Pop the node with the lowest f. If it's the goal, reconstruct and return the path.
+Otherwise, expand its walkable neighbors. If a neighbor can be reached more cheaply through the current node, update its cost and push it onto the queue.
+If the queue empties without ever reaching the goal, the maze has no valid path.
+
+
+Manhattan distance is an admissible heuristic for 4-directional grids (it never overestimates the true cost), which guarantees A* returns the optimal shortest path.
 
 ## Example Output
 
